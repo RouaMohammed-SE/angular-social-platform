@@ -1,0 +1,92 @@
+<div class="min-h-screen px-4 py-8 sm:py-12 lg:flex lg:items-center">
+  <div
+    class="mx-auto w-full max-w-6xl flex flex-col items-center gap-6 sm:gap-8 lg:flex-row lg:items-center lg:justify-between"
+  >
+    <!-- Route info section -->
+    <section class="lg:order-1 order-2 w-full max-w-xl text-center lg:text-left">
+      <h1 class="hidden lg:block text-main-color font-extrabold tracking-tight text-6xl mb-4">
+        Route Posts
+      </h1>
+      <p class="hidden lg:block text-2xl font-medium leading-snug text-slate-800 mb-6">
+        Connect with friends and the world around you on Route Posts.
+      </p>
+      <div
+        class="bg-white/80 rounded-2xl border border-border-blue p-4 shadow-sm backdrop-blur sm:p-5"
+      >
+        <p class="text-main-color text-sm font-extrabold uppercase tracking-[0.14em] mb-1">
+          About Route Academy
+        </p>
+        <p class="mb-2 text-lg font-bold text-slate-900">
+          Egypt's Leading IT Training Center Since 2012
+        </p>
+        <p class="text-sm leading-relaxed text-slate-700 mb-4">
+          Route Academy is the premier IT training center in Egypt, established in 2012. We
+          specialize in delivering high-quality training courses in programming, web development,
+          and application development. We've identified the unique challenges people may face when
+          learning new technology and made efforts to provide strategies to overcome them.
+        </p>
+        <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
+          <div class="rounded-xl border border-border-blue bg-bg-blue px-3 py-2">
+            <span class="text-main-color text-base font-extrabold">2012</span>
+            <p class="text-[11px] font-bold uppercase tracking-wide text-slate-600">Founded</p>
+          </div>
+          <div class="rounded-xl border border-border-blue bg-bg-blue px-3 py-2">
+            <span class="text-main-color text-base font-extrabold">40K+</span>
+            <p class="text-[11px] font-bold uppercase tracking-wide text-slate-600">Graduates</p>
+          </div>
+          <div class="rounded-xl border border-border-blue bg-bg-blue px-3 py-2">
+            <span class="text-main-color text-base font-extrabold">50+</span>
+            <p class="text-[11px] font-bold uppercase tracking-wide text-slate-600">
+              Partner Companies
+            </p>
+          </div>
+          <div class="rounded-xl border border-border-blue bg-bg-blue px-3 py-2">
+            <span class="text-main-color text-base font-extrabold">5</span>
+            <p class="text-[11px] font-bold uppercase tracking-wide text-slate-600">Branches</p>
+          </div>
+
+          <div class="rounded-xl border border-border-blue bg-bg-blue px-3 py-2">
+            <span class="text-main-color text-base font-extrabold">20</span>
+            <p class="text-[11px] font-bold uppercase tracking-wide text-slate-600">
+              Diplomas Available
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- Form section -->
+    <section class="lg:order-2 order-1 w-full max-w-107.5">
+      <div class="rounded-2xl bg-white p-4 sm:p-6">
+        <div class="mb-4 text-center lg:hidden">
+          <h1 class="text-3xl font-extrabold tracking-tight text-main-color">Route Posts</h1>
+          <p class="mt-1 text-base font-medium leading-snug text-slate-700">
+            Connect with friends and the world around you on Route Posts.
+          </p>
+        </div>
+
+        <!-- login - register btns -->
+        <div class="mb-5 grid grid-cols-2 rounded-xl bg-slate-100 p-1">
+          <a
+            routerLink="login"
+            routerLinkActive="active-tab"
+            [routerLinkActiveOptions]="{ exact: true }"
+            class="tab-btn"
+          >
+            Login
+          </a>
+
+          <a
+            routerLink="register"
+            routerLinkActive="active-tab"
+            [routerLinkActiveOptions]="{ exact: true }"
+            class="tab-btn"
+          >
+            Register
+          </a>
+        </div>
+        <!-- login - register  -->
+        <router-outlet></router-outlet>
+      </div>
+    </section>
+  </div>
+</div>

@@ -6,9 +6,23 @@
 @theme {
   --color-main-color: #00298d;
   --color-light-grey: #f0f2f5;
+  --color-border-blue: #c9d5ff;
+  --color-bg-blue: #f2f6ff;
 }
 
 body {
-  font-family: 'SN Pro', sans-serif;
+  font-family: 'Cairo', sans-serif;
   background-color: var(--color-light-grey);
+}
+
+@layer components {
+  .tab-btn {
+    @apply text-center cursor-pointer rounded-xl py-2 text-sm font-extrabold transition text-slate-600 hover:text-slate-800;
+  }
+}
+
+@layer components {
+  .active-tab {
+    @apply bg-white text-main-color shadow-sm hover:text-main-color;
+  }
 }
