@@ -19,10 +19,12 @@ body {
   .tab-btn {
     @apply text-center cursor-pointer rounded-xl py-2 text-sm font-extrabold transition text-slate-600 hover:text-slate-800;
   }
-}
 
-@layer components {
   .active-tab {
     @apply bg-white text-main-color shadow-sm hover:text-main-color;
+  }
+
+  .input-field {
+    @apply block w-full ps-11 pe-4 py-3 rounded-xl border border-slate-200 bg-slate-50 text-sm text-slate-800 placeholder-slate-400 transition focus:bg-white focus:outline-none focus:ring-0 focus:border-main-color;
   }
 }
