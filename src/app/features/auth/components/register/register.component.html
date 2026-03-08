@@ -76,10 +76,17 @@
         type="text"
         class="input-field"
         placeholder="Username (optional)"
+        [ngClass]="controlBorder(username)"
       />
     </div>
 
     <!-- error -->
+
+    @if (isInvalid(username)) {
+      @if (registerForm.get('username')?.errors?.['usernameExists']) {
+        <div class="text-sm text-rose-600 mt-1">Username already exists</div>
+      }
+    }
   </div>
 
   <!-- email address -->
@@ -124,6 +131,9 @@
         }
         @if (email?.errors?.['email']) {
           <span>Please enter a valid email</span>
+        }
+        @if (email?.errors?.['emailExists']) {
+          <span>This email is already registered</span>
         }
       </div>
     }

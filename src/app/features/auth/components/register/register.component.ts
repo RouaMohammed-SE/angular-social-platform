@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { AuthService } from '../../../../core/services/auth/auth.service';
 import {
   AbstractControl,
   FormControl,
@@ -8,6 +9,7 @@ import {
   ValidationErrors,
   Validators,
 } from '@angular/forms';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-register',
@@ -16,6 +18,8 @@ import {
   styleUrl: './register.component.css',
 })
 export class RegisterComponent {
+  private readonly authService = inject(AuthService);
+
   registerForm: FormGroup = new FormGroup(
     {
       name: new FormControl('', [Validators.required, Validators.minLength(3)]),
@@ -29,8 +33,9 @@ export class RegisterComponent {
       gender: new FormControl('', [Validators.required]),
       password: new FormControl('', [
         Validators.required,
-        Validators.pattern(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{8,}$/),
+        Validators.pattern(/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[#?!@$%^&*-]).{8,}$/),
       ]),
+
       rePassword: new FormControl('', [Validators.required]),
     },
     { validators: this.passwordMatchValidator },
@@ -38,6 +43,9 @@ export class RegisterComponent {
 
   get name() {
     return this.registerForm.get('name');
+  }
+  get username() {
+    return this.registerForm.get('username');
   }
   get email() {
     return this.registerForm.get('email');
@@ -144,7 +152,38 @@ export class RegisterComponent {
     if (this.registerForm.invalid) {
       this.registerForm.markAllAsTouched();
       return;
-    } else {
     }
+
+    const formData = this.registerForm.value;
+
+    this.authService.sendRegisterData(formData).subscribe({
+      next: (res) => {
+        if (res.success) {
+          this.registerForm.reset();
+          this.registerForm.markAsPristine();
+          this.registerForm.markAsUntouched();
+        }
+      },
+      error: (err: HttpErrorResponse) => {
+        const message = err.error?.message;
+
+        if (message === 'user already exists.') {
+          this.email?.setErrors({
+            ...this.email?.errors,
+            emailExists: true,
+          });
+
+          this.email?.markAsTouched();
+        }
+
+        if (message === 'username already exists.') {
+          this.registerForm.get('username')?.setErrors({
+            usernameExists: true,
+          });
+
+          this.registerForm.get('username')?.markAsTouched();
+        }
+      },
+    });
   }
 }
