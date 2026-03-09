@@ -1,7 +1,13 @@
 <h2 class="font-extrabold text-2xl text-slate-900">Create a new account</h2>
-<p class="text-sm text-slate-500 mb-5">its quite simple to create a new account</p>
+<p class="text-sm text-slate-500 mb-5">its quite simple to create a new account.</p>
 
-<form class="space-y-3.5" novalidate [formGroup]="registerForm" (ngSubmit)="onSubmitRegister()">
+<form
+  class="space-y-3.5"
+  novalidate
+  [formGroup]="registerForm"
+  (ngSubmit)="onSubmitRegister()"
+  [class.opacity-60]="isLoading"
+>
   <!-- full name -->
   <div>
     <div class="relative">

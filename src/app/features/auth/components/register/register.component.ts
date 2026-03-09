@@ -3,6 +3,7 @@ import { Component, inject } from '@angular/core';
 import { AuthService } from '../../../../core/services/auth/auth.service';
 import {
   AbstractControl,
+  FormBuilder,
   FormControl,
   FormGroup,
   ReactiveFormsModule,
@@ -27,27 +28,26 @@ import { AlertService } from '../../../../core/services/alert/alert.service';
 export class RegisterComponent {
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
+  private readonly fb = inject(FormBuilder);
   private readonly alert = inject(AlertService);
 
   isLoading: boolean = false;
 
-  registerForm: FormGroup = new FormGroup(
+  registerForm = this.fb.nonNullable.group(
     {
-      name: new FormControl('', [Validators.required, Validators.minLength(3)]),
-      username: new FormControl(''),
-      email: new FormControl('', [Validators.required, Validators.email]),
-      dateOfBirth: new FormControl('', [
-        Validators.required,
-        minimumAgeValidator(13),
-        noFutureDateValidator,
-      ]),
-      gender: new FormControl('', [Validators.required]),
-      password: new FormControl('', [
-        Validators.required,
-        Validators.pattern(/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[#?!@$%^&*-]).{8,}$/),
-      ]),
-
-      rePassword: new FormControl('', [Validators.required]),
+      name: ['', [Validators.required, Validators.minLength(3)]],
+      username: [''],
+      email: ['', [Validators.required, Validators.email]],
+      dateOfBirth: ['', [Validators.required, minimumAgeValidator(13), noFutureDateValidator]],
+      gender: ['', Validators.required],
+      password: [
+        '',
+        [
+          Validators.required,
+          Validators.pattern(/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[#?!@$%^&*-]).{8,}$/),
+        ],
+      ],
+      rePassword: ['', Validators.required],
     },
     { validators: passwordMatchValidator },
   );
