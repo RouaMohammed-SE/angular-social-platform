@@ -2,54 +2,178 @@
   <div
     class="mx-auto w-full max-w-6xl flex flex-col items-center gap-6 sm:gap-8 lg:flex-row lg:items-center lg:justify-between"
   >
-    <!-- Route info section -->
-    <section class="lg:order-1 order-2 w-full max-w-xl text-center lg:text-left">
-      <h1 class="hidden lg:block text-main-color font-extrabold tracking-tight text-6xl mb-4">
-        Route Posts
-      </h1>
-      <p class="hidden lg:block text-2xl font-medium leading-snug text-slate-800 mb-6">
-        Connect with friends and the world around you on Route Posts.
-      </p>
+    <!-- Friendra info section -->
+    <section class="lg:order-1 order-2 w-full max-w-2xl text-center lg:text-left">
       <div
-        class="bg-white/80 rounded-2xl border border-border-blue p-4 shadow-sm backdrop-blur sm:p-5"
+        class="relative overflow-hidden rounded-2xl min-h-135 flex flex-col gap-8 p-8 sm:p-10"
+        style="background: linear-gradient(160deg, #00298d 0%, #0a3db8 60%, #1a4fd6 100%)"
       >
-        <p class="text-main-color text-sm font-extrabold uppercase tracking-[0.14em] mb-1">
-          About Route Academy
-        </p>
-        <p class="mb-2 text-lg font-bold text-slate-900">
-          Egypt's Leading IT Training Center Since 2012
-        </p>
-        <p class="text-sm leading-relaxed text-slate-700 mb-4">
-          Route Academy is the premier IT training center in Egypt, established in 2012. We
-          specialize in delivering high-quality training courses in programming, web development,
-          and application development. We've identified the unique challenges people may face when
-          learning new technology and made efforts to provide strategies to overcome them.
-        </p>
-        <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
-          <div class="rounded-xl border border-border-blue bg-bg-blue px-3 py-2">
-            <span class="text-main-color text-base font-extrabold">2012</span>
-            <p class="text-[11px] font-bold uppercase tracking-wide text-slate-600">Founded</p>
+        <!-- Decorative blobs -->
+        <div
+          class="pointer-events-none absolute -top-16 -right-16 w-56 h-56 rounded-full bg-white/6"
+        ></div>
+        <div
+          class="pointer-events-none absolute -bottom-20 -left-10 w-64 h-64 rounded-full bg-white/4"
+        ></div>
+
+        <!-- Brand -->
+        <div class="relative z-10 flex items-center gap-3">
+          <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-white/20">
+            <svg
+              class="h-5 w-5"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="white"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <circle cx="18" cy="5" r="3" />
+              <circle cx="6" cy="12" r="3" />
+              <circle cx="18" cy="19" r="3" />
+              <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
+              <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
+            </svg>
           </div>
-          <div class="rounded-xl border border-border-blue bg-bg-blue px-3 py-2">
-            <span class="text-main-color text-base font-extrabold">40K+</span>
-            <p class="text-[11px] font-bold uppercase tracking-wide text-slate-600">Graduates</p>
-          </div>
-          <div class="rounded-xl border border-border-blue bg-bg-blue px-3 py-2">
-            <span class="text-main-color text-base font-extrabold">50+</span>
-            <p class="text-[11px] font-bold uppercase tracking-wide text-slate-600">
-              Partner Companies
-            </p>
-          </div>
-          <div class="rounded-xl border border-border-blue bg-bg-blue px-3 py-2">
-            <span class="text-main-color text-base font-extrabold">5</span>
-            <p class="text-[11px] font-bold uppercase tracking-wide text-slate-600">Branches</p>
+          <span class="text-lg font-medium tracking-tight text-white">Friendra</span>
+        </div>
+
+        <!-- Slides -->
+        <div class="relative z-10 flex-1 flex flex-col gap-4">
+          <div class="relative flex-1 overflow-hidden rounded-2xlbg-white/8 min-h-70">
+            <!-- Slide 1 -->
+            <div
+              class="absolute inset-0 flex flex-col items-center justify-center p-8 transition-opacity duration-700"
+              [class.opacity-100]="currentSlide === 0"
+              [class.opacity-0]="currentSlide !== 0"
+            >
+              <div class="bg-white/10 p-2 rounded-2xl backdrop-blur-sm">
+                <img
+                  src="/assets/images/auth/signup-connect-friends.jpg"
+                  alt="Connect with people"
+                  class="w-64 h-40 mb-6 rounded-2xl object-cover shadow-lg"
+                />
+              </div>
+
+              <p class="text-lg font-medium text-white text-center mb-1.5">Connect with people</p>
+              <p class="text-sm text-white/60 text-center leading-relaxed max-w-60">
+                Find and follow friends, creators, and communities that share your passions.
+              </p>
+            </div>
+
+            <!-- Slide 2 -->
+            <div
+              class="absolute inset-0 flex flex-col items-center justify-center p-8 transition-opacity duration-700"
+              [class.opacity-100]="currentSlide === 1"
+              [class.opacity-0]="currentSlide !== 1"
+            >
+              <div class="bg-white/10 p-2 rounded-2xl backdrop-blur-sm">
+                <img
+                  src="/assets/images/auth/signup-community.jpg"
+                  alt="Share your moments"
+                  class="w-64 h-40 mb-6 rounded-2xl object-cover shadow-lg"
+                />
+              </div>
+
+              <p class="text-lg font-medium text-white text-center mb-1.5">Share your moments</p>
+              <p class="text-sm text-white/60 text-center leading-relaxed max-w-60">
+                Post photos, thoughts, and stories. Let the world see what matters to you.
+              </p>
+            </div>
+
+            <!-- Slide 3 -->
+            <div
+              class="absolute inset-0 flex flex-col items-center justify-center p-8 transition-opacity duration-700"
+              [class.opacity-100]="currentSlide === 2"
+              [class.opacity-0]="currentSlide !== 2"
+            >
+              <div class="bg-white/10 p-2 rounded-2xl backdrop-blur-sm">
+                <img
+                  src="/assets/images/auth/signup-global-network.jpg"
+                  alt="Build communities"
+                  class="w-64 h-40 mb-6 rounded-2xl object-cover shadow-lg"
+                />
+              </div>
+
+              <p class="text-lg font-medium text-white text-center mb-1.5">Build communities</p>
+              <p class="text-sm text-white/60 text-center leading-relaxed max-w-60">
+                Create or join groups around topics you love and grow together.
+              </p>
+            </div>
+
+            <!-- Slide 4 -->
+            <div
+              class="absolute inset-0 flex flex-col items-center justify-center p-8 transition-opacity duration-700"
+              [class.opacity-100]="currentSlide === 3"
+              [class.opacity-0]="currentSlide !== 3"
+            >
+              <div class="bg-white/10 p-2 rounded-2xl backdrop-blur-sm">
+                <img
+                  src="/assets/images/auth/signup-platform.jpg"
+                  alt="Discover content"
+                  class="w-64 h-40 mb-6 rounded-2xl object-cover shadow-lg"
+                />
+              </div>
+
+              <p class="text-lg font-medium text-white text-center mb-1.5">Discover content</p>
+              <p class="text-sm text-white/60 text-center leading-relaxed max-w-60">
+                Explore a personalised feed of trending posts, articles, and discussions.
+              </p>
+            </div>
+
+            <!-- Slide 5 -->
+            <div
+              class="absolute inset-0 flex flex-col items-center justify-center p-8 transition-opacity duration-700"
+              [class.opacity-100]="currentSlide === 4"
+              [class.opacity-0]="currentSlide !== 4"
+            >
+              <div class="bg-white/10 p-2 rounded-2xl backdrop-blur-sm">
+                <img
+                  src="/assets/images/auth/signup-share-content.jpg"
+                  alt="Engage and react"
+                  class="w-64 h-40 mb-6 rounded-2xl object-cover shadow-lg"
+                />
+              </div>
+
+              <p class="text-lg font-medium text-white text-center mb-1.5">Engage and react</p>
+              <p class="text-sm text-white/60 text-center leading-relaxed max-w-60">
+                Like, comment, and interact with content that resonates with you.
+              </p>
+            </div>
           </div>
 
-          <div class="rounded-xl border border-border-blue bg-bg-blue px-3 py-2">
-            <span class="text-main-color text-base font-extrabold">20</span>
-            <p class="text-[11px] font-bold uppercase tracking-wide text-slate-600">
-              Diplomas Available
-            </p>
+          <!-- Nav: prev · dots · next -->
+          <div class="flex items-center justify-between">
+            <button
+              (click)="changeSlide(-1)"
+              class="flex h-9 w-9 items-center justify-center rounded-full bg-white/15 transition hover:bg-white/28"
+            >
+              <svg class="h-4 w-4" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24">
+                <path d="m15 19-7-7 7-7" />
+              </svg>
+            </button>
+
+            <div class="flex items-center gap-2">
+              @for (dot of slides; track $index) {
+                <button
+                  (click)="goToSlide($index)"
+                  class="h-1.75 rounded-full bg-white/30 transition-all duration-300"
+                  [class.w-[22px]]="currentSlide === $index"
+                  [class.rounded-[4px]]="currentSlide === $index"
+                  [class.bg-white]="currentSlide === $index"
+                  [class.w-[7px]]="currentSlide !== $index"
+                ></button>
+              }
+            </div>
+
+            <button
+              (click)="changeSlide(1)"
+              class="flex h-9 w-9 items-center justify-center rounded-full bg-white/15 transition hover:bg-white/28"
+            >
+              <svg class="h-4 w-4" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24">
+                <path d="m9 5 7 7-7 7" />
+              </svg>
+            </button>
           </div>
         </div>
       </div>
@@ -58,9 +182,9 @@
     <section class="lg:order-2 order-1 w-full max-w-107.5">
       <div class="rounded-2xl bg-white p-4 sm:p-6">
         <div class="mb-4 text-center lg:hidden">
-          <h1 class="text-3xl font-extrabold tracking-tight text-main-color">Route Posts</h1>
+          <h1 class="text-3xl font-extrabold tracking-tight text-main-color">Friendra</h1>
           <p class="mt-1 text-base font-medium leading-snug text-slate-700">
-            Connect with friends and the world around you on Route Posts.
+            Connect with friends and the world around you on Friendra.
           </p>
         </div>
 
