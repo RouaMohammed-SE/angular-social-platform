@@ -132,13 +132,13 @@
     <!-- error -->
     @if (isInvalid(email)) {
       <div class="text-sm text-rose-600 mt-1">
-        @if (email?.errors?.['required']) {
+        @if (email.errors?.['required']) {
           <span>Email is required</span>
         }
-        @if (email?.errors?.['email']) {
+        @if (email.errors?.['email']) {
           <span>Please enter a valid email</span>
         }
-        @if (email?.errors?.['emailExists']) {
+        @if (email.errors?.['emailExists']) {
           <span>This email is already registered</span>
         }
       </div>
@@ -223,15 +223,15 @@
     <!-- error -->
     @if (isInvalid(dateOfBirth)) {
       <div class="text-sm text-rose-600 mt-1">
-        @if (dateOfBirth?.errors?.['required']) {
+        @if (dateOfBirth.errors?.['required']) {
           <span>Date of birth is required</span>
         }
 
-        @if (dateOfBirth?.errors?.['futureDate']) {
+        @if (dateOfBirth.errors?.['futureDate']) {
           <span>Date cannot be in the future</span>
         }
 
-        @if (dateOfBirth?.errors?.['underAge']) {
+        @if (dateOfBirth.errors?.['underAge']) {
           <span>You must be at least 13 years old</span>
         }
       </div>
@@ -277,11 +277,11 @@
     <!-- error -->
     @if (isInvalid(password)) {
       <div class="text-sm text-rose-600 mt-1">
-        @if (password?.errors?.['required']) {
+        @if (password.errors?.['required']) {
           <span>Password is required</span>
         }
 
-        @if (password?.errors?.['pattern']) {
+        @if (password.errors?.['pattern']) {
           <span>
             Password must contain uppercase, lowercase, number, special character and be 8+
             characters
@@ -330,11 +330,11 @@
     <!-- error -->
     @if (isInvalid(rePassword)) {
       <div class="text-sm text-rose-600 mt-1 space-y-1">
-        @if (rePassword?.errors?.['required']) {
+        @if (rePassword.errors?.['required']) {
           <div>Confirm password is required</div>
         }
 
-        @if (rePassword?.errors?.['passwordMismatch']) {
+        @if (rePassword.errors?.['passwordMismatch']) {
           <div>Passwords do not match</div>
         }
       </div>
