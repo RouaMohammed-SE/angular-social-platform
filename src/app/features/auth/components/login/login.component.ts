@@ -97,6 +97,8 @@ export class LoginComponent {
           this.alert.success('Welcome back!', 'Login successful');
 
           this.router.navigate(['/feed']);
+
+          this.authService.setToken(res.data.token);
         }
 
         this.isLoading = false;

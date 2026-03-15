@@ -4,10 +4,8 @@ import { AuthService } from '../../../../core/services/auth/auth.service';
 import {
   AbstractControl,
   FormBuilder,
-  FormControl,
   FormGroup,
   ReactiveFormsModule,
-  ValidationErrors,
   Validators,
 } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -32,6 +30,7 @@ export class RegisterComponent {
   private readonly alert = inject(AlertService);
 
   isLoading: boolean = false;
+  private readonly PASSWORD_PATTERN = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[#?!@$%^&*-]).{8,}$/;
 
   registerForm = this.fb.nonNullable.group(
     {
@@ -40,46 +39,40 @@ export class RegisterComponent {
       email: ['', [Validators.required, Validators.email]],
       dateOfBirth: ['', [Validators.required, minimumAgeValidator(13), noFutureDateValidator]],
       gender: ['', Validators.required],
-      password: [
-        '',
-        [
-          Validators.required,
-          Validators.pattern(/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[#?!@$%^&*-]).{8,}$/),
-        ],
-      ],
+      password: ['', [Validators.required, Validators.pattern(this.PASSWORD_PATTERN)]],
       rePassword: ['', Validators.required],
     },
     { validators: passwordMatchValidator },
   );
 
-  get name() {
-    return this.registerForm.get('name');
+  get name(): AbstractControl {
+    return this.registerForm.controls.name;
   }
-  get username() {
-    return this.registerForm.get('username');
+  get username(): AbstractControl {
+    return this.registerForm.controls.username;
   }
-  get email() {
-    return this.registerForm.get('email');
+  get email(): AbstractControl {
+    return this.registerForm.controls.email;
   }
-  get gender() {
-    return this.registerForm.get('gender');
+  get gender(): AbstractControl {
+    return this.registerForm.controls.gender;
   }
-  get password() {
-    return this.registerForm.get('password');
+  get password(): AbstractControl {
+    return this.registerForm.controls.password;
   }
-  get dateOfBirth() {
-    return this.registerForm.get('dateOfBirth');
+  get dateOfBirth(): AbstractControl {
+    return this.registerForm.controls.dateOfBirth;
   }
 
-  get rePassword() {
-    return this.registerForm.get('rePassword');
+  get rePassword(): AbstractControl {
+    return this.registerForm.controls.rePassword;
   }
 
   isInvalid(control: AbstractControl | null): boolean {
     return !!(control && control.invalid && (control.touched || control.dirty));
   }
 
-  iconClass(control: AbstractControl | null) {
+  iconClass(control: AbstractControl | null): string {
     if (!control) return 'text-slate-400';
 
     if (control.invalid && (control.touched || control.dirty)) {
@@ -93,7 +86,7 @@ export class RegisterComponent {
     return 'text-slate-400';
   }
 
-  controlBorder(control: AbstractControl | null) {
+  controlBorder(control: AbstractControl | null): string {
     if (!control) return 'border-slate-300 ';
 
     if (control.invalid && (control.touched || control.dirty)) {
@@ -115,18 +108,16 @@ export class RegisterComponent {
 
     this.isLoading = true;
 
-    const formData = this.registerForm.value;
+    const formData = this.registerForm.getRawValue();
 
     this.authService.sendRegisterData(formData).subscribe({
       next: (res) => {
-        if (res.success === true) {
+        if (res.success) {
           // clear backend errors if success
-          this.email?.setErrors(null);
-          this.registerForm.get('username')?.setErrors(null);
+          this.email.setErrors(null);
+          this.username.setErrors(null);
 
           this.registerForm.reset();
-          this.registerForm.markAsPristine();
-          this.registerForm.markAsUntouched();
 
           this.alert
             .success('Account Created!', 'Redirecting to login...')
@@ -140,20 +131,20 @@ export class RegisterComponent {
         const message = err.error?.message;
 
         if (message === 'user already exists.') {
-          this.email?.setErrors({
-            ...this.email?.errors,
+          this.email.setErrors({
+            ...this.email.errors,
             emailExists: true,
           });
 
-          this.email?.markAsTouched();
+          this.email.markAsTouched();
         }
 
         if (message === 'username already exists.') {
-          this.registerForm.get('username')?.setErrors({
+          this.username.setErrors({
             usernameExists: true,
           });
 
-          this.registerForm.get('username')?.markAsTouched();
+          this.username.markAsTouched();
         }
 
         this.isLoading = false;
