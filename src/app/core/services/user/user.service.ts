@@ -2,6 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import {
+  DeleteUserCoverResponse,
   FollowUnfollowResponse,
   GetBookmarksResponse,
   GetFollowSuggestionsResponse,
@@ -9,6 +10,7 @@ import {
   GetUserPostsResponse,
   GetUserProfileResponse,
   UploadProfilePhotoResponse,
+  UpdateUserCoverResponse,
 } from '../../models/user-response.interface';
 import { environment } from '../../../../environments/environment';
 
@@ -41,10 +43,10 @@ export class UserService {
     return this.httpClient.get<GetUserPostsResponse>(`${environment.apiUrl}/users/${userId}/posts`);
   }
 
-  deleteUserCover(): Observable<unknown> {
-    return this.httpClient.delete<unknown>(`${environment.apiUrl}/users/cover`);
+  deleteUserCover(): Observable<DeleteUserCoverResponse> {
+    return this.httpClient.delete<DeleteUserCoverResponse>(`${environment.apiUrl}/users/cover`);
   }
-  updateUserCover(data: FormData): Observable<unknown> {
-    return this.httpClient.put<unknown>(`${environment.apiUrl}/users/upload-cover`, data);
+  updateUserCover(data: FormData): Observable<UpdateUserCoverResponse> {
+    return this.httpClient.put<UpdateUserCoverResponse>(`${environment.apiUrl}/users/upload-cover`, data);
   }
 }
