@@ -1,21 +1,11 @@
-export interface UserDataResponse {
-  success: boolean;
-  message: string;
-  data: Data;
-}
+import { ApiResponse } from './api-response.interface';
+import { User } from './user.interface';
 
-export interface Data {
+export interface UserData {
   token: string;
   tokenType: string;
   expiresIn: string;
   user: User;
 }
 
-export interface User {
-  _id: string;
-  name: string;
-  username: string;
-  email: string;
-  photo: string;
-  cover: string;
-}
+export type UserDataResponse = ApiResponse<UserData>;
