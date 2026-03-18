@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { UserDataResponse } from '../../models/user-data.interface';
+import { ChangePasswordResponse, LoginResponse, RegisterResponse } from '../../models/auth-response.interface';
 import { environment } from '../../../../environments/environment';
 
 @Injectable({
@@ -12,12 +12,16 @@ export class AuthService {
 
   private readonly TOKEN_KEY = 'userToken';
 
-  sendRegisterData(data: object): Observable<UserDataResponse> {
-    return this.httpClient.post<UserDataResponse>(environment.apiUrl + '/users/signup', data);
+  sendRegisterData(data: object): Observable<RegisterResponse> {
+    return this.httpClient.post<RegisterResponse>(environment.apiUrl + '/users/signup', data);
   }
 
-  sendLoginData(data: object): Observable<any> {
-    return this.httpClient.post<UserDataResponse>(environment.apiUrl + '/users/signin', data);
+  sendLoginData(data: object): Observable<LoginResponse> {
+    return this.httpClient.post<LoginResponse>(environment.apiUrl + '/users/signin', data);
+  }
+
+  changePassword(data: object): Observable<ChangePasswordResponse> {
+    return this.httpClient.patch<ChangePasswordResponse>(`${environment.apiUrl}/users/change-password`, data);
   }
 
   setToken(token: string): void {
