@@ -82,7 +82,6 @@ src/
 
 ## Screenshots
 
-Add your screenshots under a folder such as `docs/screenshots/` and keep the names below for the README to work cleanly.
 
 ### Authentication
 
