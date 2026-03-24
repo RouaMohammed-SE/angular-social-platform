@@ -1,7 +1,7 @@
 import { Comment } from './comment.interface';
 import { User } from './user.interface';
 
-export type PostPrivacy = 'public' | 'private' | 'friends';
+export type PostPrivacy = 'public' | 'only_me' | 'following';
 
 export interface Post {
   _id: string;

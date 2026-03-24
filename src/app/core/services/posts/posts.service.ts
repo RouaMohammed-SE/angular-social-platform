@@ -14,6 +14,7 @@ import {
   UpdatePostResponse,
 } from '../../models/posts-response.interface';
 import { environment } from '../../../../environments/environment';
+import { buildRequestContext } from '../../interceptors/request-context/request-context';
 
 @Injectable({
   providedIn: 'root',
@@ -21,20 +22,28 @@ import { environment } from '../../../../environments/environment';
 export class PostsService {
   private readonly httpClient = inject(HttpClient);
 
-  getAllPosts(): Observable<GetAllPostsResponse> {
-    return this.httpClient.get<GetAllPostsResponse>(`${environment.apiUrl}/posts`);
+  getAllPosts(page = 1, limit = 20): Observable<GetAllPostsResponse> {
+    return this.httpClient.get<GetAllPostsResponse>(
+      `${environment.apiUrl}/posts?page=${page}&limit=${limit}`,
+    );
   }
 
-  getHomeFeed(): Observable<GetHomeFeedResponse> {
-    return this.httpClient.get<GetHomeFeedResponse>(`${environment.apiUrl}/posts/feed?only=following`);
+  getHomeFeed(page = 1, limit = 20): Observable<GetHomeFeedResponse> {
+    return this.httpClient.get<GetHomeFeedResponse>(
+      `${environment.apiUrl}/posts/feed?only=following&page=${page}&limit=${limit}`,
+    );
   }
 
-  createPost(data: object): Observable<CreatePostResponse> {
-    return this.httpClient.post<CreatePostResponse>(`${environment.apiUrl}/posts`, data);
+  createPost(data: FormData): Observable<CreatePostResponse> {
+    return this.httpClient.post<CreatePostResponse>(`${environment.apiUrl}/posts`, data, {
+      context: createLocalFeedbackContext(),
+    });
   }
 
-  getsinglePost(postId: string): Observable<GetSinglePostResponse> {
-    return this.httpClient.get<GetSinglePostResponse>(`${environment.apiUrl}/posts/${postId}`);
+  getSinglePost(postId: string): Observable<GetSinglePostResponse> {
+    return this.httpClient.get<GetSinglePostResponse>(`${environment.apiUrl}/posts/${postId}`, {
+      context: createLocalLoadingContext(),
+    });
   }
 
   getPostLikes(postId: string): Observable<GetPostLikesResponse> {
@@ -42,17 +51,28 @@ export class PostsService {
   }
 
   updatePost(postId: string, postData: object): Observable<UpdatePostResponse> {
-    return this.httpClient.put<UpdatePostResponse>(`${environment.apiUrl}/posts/${postId}`, postData);
+    return this.httpClient.put<UpdatePostResponse>(
+      `${environment.apiUrl}/posts/${postId}`,
+      postData,
+      {
+        context: createLocalFeedbackContext(),
+      },
+    );
   }
 
   deletePost(postId: string): Observable<DeletePostResponse> {
-    return this.httpClient.delete<DeletePostResponse>(`${environment.apiUrl}/posts/${postId}`);
+    return this.httpClient.delete<DeletePostResponse>(`${environment.apiUrl}/posts/${postId}`, {
+      context: createLocalFeedbackContext(),
+    });
   }
 
-  linkeUnlikePost(postId: string, postData: object | null): Observable<TogglePostLikeResponse> {
+  likeUnlikePost(postId: string, postData: object | null): Observable<TogglePostLikeResponse> {
     return this.httpClient.put<TogglePostLikeResponse>(
       `${environment.apiUrl}/posts/${postId}/like`,
       postData,
+      {
+        context: createLocalFeedbackContext(),
+      },
     );
   }
 
@@ -63,10 +83,32 @@ export class PostsService {
     return this.httpClient.put<ToggleBookmarkResponse>(
       `${environment.apiUrl}/posts/${postId}/bookmark`,
       postData,
+      {
+        context: createLocalFeedbackContext(),
+      },
     );
   }
 
   sharePost(postId: string, postData: object): Observable<SharePostResponse> {
-    return this.httpClient.post<SharePostResponse>(`${environment.apiUrl}/posts/${postId}/share`, postData);
+    return this.httpClient.post<SharePostResponse>(
+      `${environment.apiUrl}/posts/${postId}/share`,
+      postData,
+      {
+        context: createLocalFeedbackContext(),
+      },
+    );
   }
+}
+
+function createLocalFeedbackContext() {
+  return buildRequestContext({
+    skipErrorHandling: true,
+    skipLoadingSpinner: true,
+  });
+}
+
+function createLocalLoadingContext() {
+  return buildRequestContext({
+    skipLoadingSpinner: true,
+  });
 }

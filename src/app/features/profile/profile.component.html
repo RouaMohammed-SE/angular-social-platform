@@ -1,1 +1,568 @@
-<p>profile works!</p>
+<div class="space-y-5 sm:space-y-6">
+  <button
+    type="button"
+    class="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-bold text-slate-700 transition hover:bg-slate-50"
+    (click)="goBack()"
+  >
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+    >
+      <path d="m12 19-7-7 7-7"></path>
+      <path d="M19 12H5"></path>
+    </svg>
+    Back
+  </button>
+
+  @if (isLoadingProfile) {
+    <section class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+      <div class="h-48 animate-pulse bg-slate-200"></div>
+      <div class="-mt-12 p-5">
+        <div class="rounded-3xl border border-white/60 bg-white/92 p-5">
+          <div class="flex items-end gap-4">
+            <div class="h-24 w-24 animate-pulse rounded-full bg-slate-200"></div>
+            <div class="space-y-2">
+              <div class="h-5 w-40 animate-pulse rounded bg-slate-200"></div>
+              <div class="h-4 w-28 animate-pulse rounded bg-slate-100"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  } @else if (profileUser; as profile) {
+    <section
+      class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-[0_2px_10px_rgba(15,23,42,.06)] sm:rounded-[28px]"
+    >
+      <div class="group/cover relative h-44 sm:h-52 lg:h-60">
+        @if (profile.cover) {
+          <button
+            type="button"
+            class="block h-full w-full cursor-zoom-in"
+            (click)="openImageViewer(profile.cover, profile.name + ' cover', 'Cover photo')"
+          >
+            <img
+              [src]="profile.cover"
+              [alt]="profile.name + ' cover'"
+              class="h-full w-full object-cover"
+            />
+          </button>
+          <div class="absolute inset-0 bg-black/15"></div>
+        } @else {
+          <div
+            class="h-full w-full bg-[linear-gradient(112deg,#0f172a_0%,#1e3a5f_36%,#2b5178_72%,#5f8fb8_100%)]"
+          ></div>
+          <div
+            class="absolute inset-0 bg-[radial-gradient(circle_at_20%_24%,rgba(255,255,255,.14)_0%,rgba(255,255,255,0)_36%)]"
+          ></div>
+          <div
+            class="absolute inset-0 bg-[radial-gradient(circle_at_86%_12%,rgba(186,230,253,.22)_0%,rgba(186,230,253,0)_44%)]"
+          ></div>
+        }
+
+        @if (isOwnProfile) {
+          <div
+            class="absolute right-2 top-2 z-10 flex flex-wrap items-center justify-end gap-1.5 sm:right-3 sm:top-3 sm:gap-2"
+          >
+            <label
+              class="inline-flex cursor-pointer items-center gap-1 rounded-lg bg-black/45 px-2 py-1 text-[11px] font-bold text-white backdrop-blur transition hover:bg-black/60 sm:px-3 sm:py-1.5 sm:text-xs"
+              [class.cursor-not-allowed]="isUploadingCover"
+              [class.opacity-70]="isUploadingCover"
+            >
+              {{ getCoverLabel() }}
+              <input
+                accept="image/*"
+                class="hidden"
+                type="file"
+                [disabled]="isUploadingCover"
+                (change)="uploadCover($event)"
+              />
+            </label>
+
+            @if (profile.cover) {
+              <button
+                type="button"
+                class="inline-flex items-center gap-1 rounded-lg bg-white/85 px-2 py-1 text-[11px] font-bold text-slate-700 backdrop-blur transition hover:bg-white sm:px-3 sm:py-1.5 sm:text-xs"
+                [disabled]="isDeletingCover"
+                (click)="removeCover()"
+              >
+                {{ isDeletingCover ? 'Removing...' : 'Remove cover' }}
+              </button>
+            }
+          </div>
+        }
+      </div>
+
+      <div class="relative -mt-12 px-3 pb-5 sm:-mt-16 sm:px-8 sm:pb-6">
+        <div class="rounded-3xl border border-white/60 bg-white/92 p-5 backdrop-blur-xl sm:p-7">
+          <div class="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+            <div class="min-w-0">
+              <div class="flex items-end gap-4">
+                <div class="relative shrink-0">
+                  <button
+                    type="button"
+                    class="cursor-zoom-in rounded-full"
+                    (click)="openImageViewer(getProfilePhoto(profile), profile.name, 'Profile photo')"
+                  >
+                    <img
+                      class="h-28 w-28 rounded-full border-4 border-white object-cover shadow-md ring-2 ring-[#dbeafe]"
+                      [src]="getProfilePhoto(profile)"
+                      [alt]="profile.name"
+                    />
+                  </button>
+
+                  @if (isOwnProfile) {
+                    <label
+                      class="absolute bottom-1 right-1 flex h-9 w-9 cursor-pointer items-center justify-center rounded-full bg-[#1877f2] text-white shadow-sm transition hover:bg-[#166fe5]"
+                      [class.cursor-not-allowed]="isUploadingPhoto"
+                      [class.opacity-70]="isUploadingPhoto"
+                      [title]="getPhotoLabel()"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="17"
+                        height="17"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                      >
+                        <path
+                          d="M13.997 4a2 2 0 0 1 1.76 1.05l.486.9A2 2 0 0 0 18.003 7H20a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h1.997a2 2 0 0 0 1.759-1.048l.489-.904A2 2 0 0 1 10.004 4z"
+                        ></path>
+                        <circle cx="12" cy="13" r="3"></circle>
+                      </svg>
+                      <input
+                        accept="image/*"
+                        class="hidden"
+                        type="file"
+                        [disabled]="isUploadingPhoto"
+                        (change)="uploadProfilePhoto($event)"
+                      />
+                    </label>
+                  }
+                </div>
+
+                <div class="min-w-0 pb-1">
+                  <h2
+                    class="truncate text-2xl font-black tracking-tight text-slate-900 sm:text-4xl"
+                  >
+                    {{ profile.name }}
+                  </h2>
+                  <p class="mt-1 text-lg font-semibold text-slate-500 sm:text-xl">
+                    {{ getDisplayUsername(profile) }}
+                  </p>
+                  <div
+                    class="mt-3 inline-flex items-center gap-2 rounded-full border border-[#d7e7ff] bg-[#eef6ff] px-3 py-1 text-xs font-bold text-[#0b57d0]"
+                  >
+                    {{ getProfileBadgeText(profile) }}
+                  </div>
+                  <p class="mt-3 max-w-2xl text-sm leading-6 text-slate-600">
+                    {{ getProfileSummary(profile) }}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex w-full flex-col gap-2 sm:w-auto sm:min-w-[220px]">
+            @if (!isOwnProfile) {
+                <button
+                  type="button"
+                  class="inline-flex w-full items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-extrabold transition sm:w-auto"
+                  [class.bg-[#1877f2]]="!isFollowing"
+                  [class.text-white]="!isFollowing"
+                  [class.hover:bg-[#166fe5]]="!isFollowing"
+                  [class.bg-emerald-50]="isFollowing"
+                  [class.text-emerald-700]="isFollowing"
+                  [class.hover:bg-emerald-100]="isFollowing"
+                  [disabled]="isUpdatingFollow"
+                  (click)="toggleFollow()"
+                >
+                  {{ isUpdatingFollow ? 'Updating...' : isFollowing ? 'Following' : 'Follow' }}
+                </button>
+                <p class="text-center text-xs font-medium text-slate-500 sm:text-right">
+                  {{ isFollowing ? 'You will see their new posts sooner in your feed.' : 'Follow to keep up with their latest posts.' }}
+                </p>
+              } @else {
+                <a
+                  routerLink="/changePassword"
+                  class="inline-flex w-full items-center justify-center rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-bold text-slate-700 transition hover:bg-slate-50 sm:w-auto"
+                >
+                  Account settings
+                </a>
+                <a
+                  routerLink="/suggestions"
+                  class="inline-flex w-full items-center justify-center rounded-xl bg-[#1877f2] px-4 py-2.5 text-sm font-extrabold text-white transition hover:bg-[#166fe5] sm:w-auto"
+                >
+                  Find people to follow
+                </a>
+              }
+            </div>
+          </div>
+
+          <div class="mt-5 grid gap-4 lg:grid-cols-[1.3fr_.7fr]">
+            <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+              <div class="flex items-center justify-between gap-2">
+                <h3 class="text-sm font-extrabold text-slate-800">About</h3>
+                @if (profile.gender) {
+                  <span class="rounded-full bg-white px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide text-slate-500">
+                    {{ profile.gender }}
+                  </span>
+                }
+              </div>
+
+              <div class="mt-3 space-y-3 text-sm text-slate-600">
+                @if (profile.email) {
+                  <div class="rounded-2xl border border-slate-200 bg-white px-3 py-2.5">
+                    <p class="text-[11px] font-bold uppercase tracking-wide text-slate-400">Email</p>
+                    <p class="mt-1 font-semibold text-slate-700">{{ profile.email }}</p>
+                  </div>
+                }
+                @if (profile.dateOfBirth) {
+                  <div class="rounded-2xl border border-slate-200 bg-white px-3 py-2.5">
+                    <p class="text-[11px] font-bold uppercase tracking-wide text-slate-400">Birthday</p>
+                    <p class="mt-1 font-semibold text-slate-700">
+                      {{ profile.dateOfBirth | date: 'MMM d, y' }}
+                    </p>
+                  </div>
+                }
+                <div class="rounded-2xl border border-slate-200 bg-white px-3 py-2.5">
+                  <p class="text-[11px] font-bold uppercase tracking-wide text-slate-400">Joined</p>
+                  <p class="mt-1 font-semibold text-slate-700">
+                    {{ profile.createdAt | date: 'MMMM y' }}
+                  </p>
+                </div>
+                @if (isOwnProfile && profile.passwordChangedAt) {
+                  <div class="rounded-2xl border border-slate-200 bg-white px-3 py-2.5">
+                    <p class="text-[11px] font-bold uppercase tracking-wide text-slate-400">Password updated</p>
+                    <p class="mt-1 font-semibold text-slate-700">
+                      {{ profile.passwordChangedAt | date: 'MMM d, y, h:mm a' }}
+                    </p>
+                  </div>
+                }
+              </div>
+            </div>
+
+            <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
+              <div class="rounded-2xl border border-[#dbeafe] bg-[linear-gradient(180deg,#f8fbff_0%,#f0f7ff_100%)] px-4 py-3">
+                <p class="text-xs font-bold uppercase tracking-wide text-[#1f4f96]">Followers</p>
+                <p class="mt-1 text-2xl font-black text-slate-900">
+                  {{ profile.followersCount || 0 }}
+                </p>
+              </div>
+              <div class="rounded-2xl border border-[#dbeafe] bg-[linear-gradient(180deg,#f8fbff_0%,#f0f7ff_100%)] px-4 py-3">
+                <p class="text-xs font-bold uppercase tracking-wide text-[#1f4f96]">Following</p>
+                <p class="mt-1 text-2xl font-black text-slate-900">
+                  {{ profile.followingCount || 0 }}
+                </p>
+              </div>
+              @if (isOwnProfile) {
+                <div class="rounded-2xl border border-[#dbeafe] bg-[linear-gradient(180deg,#f8fbff_0%,#f0f7ff_100%)] px-4 py-3">
+                  <p class="text-xs font-bold uppercase tracking-wide text-[#1f4f96]">Bookmarks</p>
+                  <p class="mt-1 text-2xl font-black text-slate-900">
+                    {{ profile.bookmarksCount || 0 }}
+                  </p>
+                </div>
+              }
+            </div>
+          </div>
+
+          @if (!isOwnProfile) {
+            <div class="mt-5 grid gap-4 lg:grid-cols-2">
+              <div class="rounded-2xl border border-slate-200 bg-white p-4">
+                <div class="flex items-center justify-between gap-2">
+                  <h3 class="text-sm font-extrabold text-slate-800">Followers</h3>
+                  <span class="text-xs font-bold text-slate-400">{{
+                    profile.followersCount || 0
+                  }}</span>
+                </div>
+                <div class="mt-3 space-y-3">
+                  @for (user of followersPreview; track user.id ?? user._id) {
+                    <a
+                      class="flex items-center gap-3 rounded-xl px-2 py-2 transition hover:bg-slate-50"
+                      [routerLink]="['/profile', user.id ?? user._id]"
+                    >
+                      <img
+                        class="h-10 w-10 rounded-full object-cover"
+                        [src]="getPreviewPhoto(user)"
+                        [alt]="user.name"
+                      />
+                      <p class="truncate text-sm font-bold text-slate-900">{{ user.name }}</p>
+                    </a>
+                  } @empty {
+                    <p class="text-sm text-slate-500">No followers to show yet.</p>
+                  }
+                </div>
+              </div>
+
+              <div class="rounded-2xl border border-slate-200 bg-white p-4">
+                <div class="flex items-center justify-between gap-2">
+                  <h3 class="text-sm font-extrabold text-slate-800">Following</h3>
+                  <span class="text-xs font-bold text-slate-400">{{
+                    profile.followingCount || 0
+                  }}</span>
+                </div>
+                <div class="mt-3 space-y-3">
+                  @for (user of followingPreview; track user.id ?? user._id) {
+                    <a
+                      class="flex items-center gap-3 rounded-xl px-2 py-2 transition hover:bg-slate-50"
+                      [routerLink]="['/profile', user.id ?? user._id]"
+                    >
+                      <img
+                        class="h-10 w-10 rounded-full object-cover"
+                        [src]="getPreviewPhoto(user)"
+                        [alt]="user.name"
+                      />
+                      <p class="truncate text-sm font-bold text-slate-900">{{ user.name }}</p>
+                    </a>
+                  } @empty {
+                    <p class="text-sm text-slate-500">No following users to show yet.</p>
+                  }
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    </section>
+
+    @if (viewerImageUrl) {
+      <div
+        class="fixed inset-0 z-[60] flex items-center justify-center bg-slate-950/82 p-4 backdrop-blur-sm"
+        (click)="closeImageViewer()"
+      >
+        <div
+          class="relative w-full max-w-5xl"
+          (click)="$event.stopPropagation()"
+        >
+          <div class="mb-3 flex items-center justify-between gap-3 text-white">
+            <div>
+              <p class="text-sm font-bold uppercase tracking-[0.2em] text-white/60">
+                {{ viewerImageLabel }}
+              </p>
+              <p class="mt-1 text-lg font-extrabold">
+                {{ viewerImageAlt }}
+              </p>
+            </div>
+
+            <button
+              type="button"
+              class="inline-flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-white transition hover:bg-white/20"
+              (click)="closeImageViewer()"
+              aria-label="Close image viewer"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M18 6 6 18"></path>
+                <path d="m6 6 12 12"></path>
+              </svg>
+            </button>
+          </div>
+
+          <div class="overflow-hidden rounded-[28px] border border-white/10 bg-slate-900/60 shadow-2xl">
+            <img
+              [src]="viewerImageUrl"
+              [alt]="viewerImageAlt"
+              class="max-h-[78vh] w-full object-contain"
+            />
+          </div>
+        </div>
+      </div>
+    }
+
+    <section class="space-y-4">
+      @if (isOwnProfile) {
+        <div
+          class="flex flex-wrap items-center justify-between gap-2 rounded-2xl border border-slate-200 bg-white p-3 shadow-sm"
+        >
+          <div
+            class="grid w-full grid-cols-2 gap-2 rounded-xl bg-slate-100 p-1.5 sm:inline-flex sm:w-auto sm:gap-0"
+          >
+            <button
+              type="button"
+              class="inline-flex items-center justify-center rounded-lg px-4 py-2 text-sm font-bold transition"
+              [class.bg-white]="activeTab === 'posts'"
+              [class.text-[#1877f2]]="activeTab === 'posts'"
+              [class.shadow-sm]="activeTab === 'posts'"
+              [class.text-slate-600]="activeTab !== 'posts'"
+              (click)="setActiveTab('posts')"
+            >
+              My Posts
+            </button>
+            <button
+              type="button"
+              class="inline-flex items-center justify-center rounded-lg px-4 py-2 text-sm font-bold transition"
+              [class.bg-white]="activeTab === 'saved'"
+              [class.text-[#1877f2]]="activeTab === 'saved'"
+              [class.shadow-sm]="activeTab === 'saved'"
+              [class.text-slate-600]="activeTab !== 'saved'"
+              (click)="setActiveTab('saved')"
+            >
+              Saved
+            </button>
+          </div>
+
+          <span class="rounded-full bg-[#e7f3ff] px-3 py-1 text-xs font-bold text-[#1877f2]">{{
+            visibleCount
+          }}</span>
+        </div>
+      }
+
+      @if (
+        (activeTab === 'saved' && isLoadingSaved) ||
+        (activeTab === 'posts' && isLoadingPosts)
+      ) {
+        <div class="rounded-2xl border border-slate-200 bg-white px-6 py-12 text-center shadow-sm">
+          <p class="text-sm font-semibold text-slate-500">Loading posts...</p>
+        </div>
+      } @else if (visiblePosts.length > 0) {
+        <div class="space-y-3">
+          @for (post of visiblePosts; track post.id ?? post._id) {
+            <article
+              class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-[0_1px_6px_rgba(15,23,42,.05)] transition hover:shadow-sm"
+            >
+              <div class="p-4">
+                <div class="flex flex-wrap items-center justify-between gap-2">
+                  <div class="flex min-w-0 items-center gap-2">
+                    <img
+                      class="h-10 w-10 rounded-full object-cover"
+                      [src]="getProfilePhoto(profile)"
+                      [alt]="profile.name"
+                    />
+                    <div class="min-w-0">
+                      <p class="truncate text-sm font-extrabold text-slate-900">
+                        {{ profile.name }}
+                      </p>
+                      <p class="truncate text-xs font-semibold text-slate-500">
+                        {{ '@' + (profile.username || 'route-user') }}
+                      </p>
+                    </div>
+                  </div>
+
+                  <a
+                    [routerLink]="['/posts', post.id ?? post._id]"
+                    class="rounded-md px-2 py-1 text-xs font-bold text-[#1877f2] transition hover:bg-[#e7f3ff]"
+                  >
+                    View details
+                  </a>
+                </div>
+
+                <div class="pt-3">
+                  <p class="whitespace-pre-wrap text-[15px] leading-relaxed text-slate-800">
+                    {{
+                      post.body || (post.image ? 'updated profile picture.' : 'Shared an update.')
+                    }}
+                  </p>
+                </div>
+              </div>
+
+              @if (post.image) {
+                <div class="border-y border-slate-200 bg-slate-950/95">
+                  <img
+                    [src]="post.image"
+                    [alt]="post.body || 'post'"
+                    class="max-h-140 w-full object-contain"
+                  />
+                </div>
+              }
+
+              @if (post.sharedPost) {
+                <div
+                  class="mx-4 my-3 overflow-hidden rounded-xl border border-slate-200 bg-slate-50"
+                >
+                  <div class="p-3">
+                    <div class="mb-2 flex items-center gap-2">
+                      <img
+                        class="h-9 w-9 rounded-full object-cover"
+                        [src]="
+                          typeof post.sharedPost.user === 'string'
+                            ? '/assets/images/app/default-male-profile.png'
+                            : getPreviewPhoto(post.sharedPost.user)
+                        "
+                        [alt]="
+                          typeof post.sharedPost.user === 'string'
+                            ? 'Shared post user'
+                            : post.sharedPost.user.name
+                        "
+                      />
+                      <div class="min-w-0">
+                        <p class="truncate text-sm font-bold text-slate-900">
+                          {{
+                            typeof post.sharedPost.user === 'string'
+                              ? 'Original post'
+                              : post.sharedPost.user.name
+                          }}
+                        </p>
+                      </div>
+                      <a
+                        [routerLink]="['/posts', post.sharedPost.id ?? post.sharedPost._id]"
+                        class="ml-auto inline-flex items-center gap-1 rounded-lg px-2 py-1 text-xs font-bold text-[#1877f2] hover:bg-[#e7f3ff]"
+                      >
+                        Original Post
+                      </a>
+                    </div>
+                    <p class="whitespace-pre-wrap text-sm leading-relaxed text-slate-800">
+                      {{ post.sharedPost.body }}
+                    </p>
+                  </div>
+                </div>
+              }
+
+              <div
+                class="flex flex-col gap-2 border-t border-slate-200 px-4 py-3 text-sm text-slate-600 sm:flex-row sm:items-center sm:justify-between sm:gap-3"
+              >
+                <div class="flex flex-wrap items-center gap-3 sm:gap-5">
+                  <span class="inline-flex items-center gap-2 font-semibold"
+                    >{{ post.likesCount || 0 }} likes</span
+                  >
+                  <span class="inline-flex items-center gap-2 font-semibold"
+                    >{{ post.sharesCount || 0 }} shares</span
+                  >
+                  <span class="inline-flex items-center gap-2 font-semibold"
+                    >{{ post.commentsCount || 0 }} comments</span
+                  >
+                </div>
+                <span class="inline-flex items-center gap-1.5 text-xs font-bold text-slate-500">{{
+                  formatPostDate(post.createdAt)
+                }}</span>
+              </div>
+            </article>
+          }
+        </div>
+      } @else {
+        <div
+          class="rounded-2xl border border-dashed border-slate-200 bg-white px-6 py-12 text-center shadow-sm"
+        >
+          <p class="text-lg font-extrabold text-slate-900">
+            {{
+              isOwnProfile && activeTab === 'saved'
+                ? 'No saved posts yet'
+                : 'No posts to show yet'
+            }}
+          </p>
+          <p class="mx-auto mt-2 max-w-md text-sm leading-6 text-slate-500">
+            {{
+              isOwnProfile && activeTab === 'saved'
+                ? 'Posts you save will appear here.'
+                : 'Once this account publishes something, it will appear here.'
+            }}
+          </p>
+        </div>
+      }
+    </section>
+  }
+</div>

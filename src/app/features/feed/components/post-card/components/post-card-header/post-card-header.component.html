@@ -1,0 +1,62 @@
+<div class="flex items-start gap-3">
+  <a
+    class="shrink-0 rounded-full transition hover:opacity-90"
+    [routerLink]="authorProfileLink"
+  >
+    <img
+      [alt]="author?.name ?? 'Post author'"
+      class="h-11 w-11 rounded-full object-cover"
+      [src]="author | avatarPhoto"
+    >
+  </a>
+
+  <div class="min-w-0 flex-1">
+    <div class="flex flex-wrap items-center gap-2">
+      <a
+        class="truncate text-sm font-extrabold text-slate-900 transition hover:text-[#1877f2] hover:underline"
+        [routerLink]="authorProfileLink"
+      >
+        {{ author?.name || 'Unknown user' }}
+      </a>
+
+      @if (isShare) {
+        <span
+          class="rounded-full bg-slate-100 px-2 py-0.5 text-[11px] font-bold uppercase tracking-wide text-slate-500"
+        >
+          Shared
+        </span>
+      }
+
+      @if (bookmarked) {
+        <span class="rounded-full bg-[#e7f3ff] px-2 py-0.5 text-[11px] font-bold text-[#1877f2]">
+          Saved
+        </span>
+      }
+    </div>
+
+    <div class="mt-1 flex flex-wrap items-center gap-2 text-xs text-slate-500">
+      @if (author?.username) {
+        <a
+          class="transition hover:text-[#1877f2] hover:underline"
+          [routerLink]="authorProfileLink"
+        >
+          {{ '@' + authorUsername }}
+        </a>
+      }
+      <span class="text-slate-300">&middot;</span>
+      <span>{{ relativeCreatedAt }}</span>
+      <span class="text-slate-300">&middot;</span>
+      <span>{{ privacyLabel }}</span>
+    </div>
+  </div>
+
+  <app-post-card-menu
+    [bookmarked]="bookmarked"
+    [isOpen]="isMenuOpen"
+    [isOwner]="isCurrentUserPost"
+    (toggle)="toggleMenu.emit()"
+    (bookmark)="bookmark.emit()"
+    (edit)="edit.emit()"
+    (delete)="delete.emit()"
+  ></app-post-card-menu>
+</div>

@@ -4,7 +4,6 @@ import { AuthService } from '../../../../core/services/auth/auth.service';
 import {
   AbstractControl,
   FormBuilder,
-  FormGroup,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
@@ -119,9 +118,8 @@ export class RegisterComponent {
 
           this.registerForm.reset();
 
-          this.alert
-            .success('Account Created!', 'Redirecting to login...')
-            .then(() => this.router.navigate(['/login']));
+          this.alert.success('Account Created!', 'Redirecting to login...');
+          this.router.navigate(['/login']);
         }
 
         this.isLoading = false;

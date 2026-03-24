@@ -1,0 +1,202 @@
+<div class="mx-auto max-w-4xl space-y-4">
+  <button
+    type="button"
+    class="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-bold text-slate-700 transition hover:bg-slate-50"
+    (click)="goBack()"
+  >
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      class="lucide lucide-arrow-left"
+      aria-hidden="true"
+    >
+      <path d="m12 19-7-7 7-7"></path>
+      <path d="M19 12H5"></path>
+    </svg>
+    Back to feed
+  </button>
+
+  <section class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+    <div class="mb-3 flex items-center justify-between gap-2">
+      <div class="flex items-center gap-2">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="18"
+          height="18"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          class="lucide lucide-users text-[#1877f2]"
+          aria-hidden="true"
+        >
+          <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+          <path d="M16 3.128a4 4 0 0 1 0 7.744"></path>
+          <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+          <circle cx="9" cy="7" r="4"></circle>
+        </svg>
+        <h1 class="text-xl font-extrabold text-slate-900">All Suggested Friends</h1>
+      </div>
+
+      <span class="rounded-full bg-slate-100 px-2 py-0.5 text-xs font-bold text-slate-600">
+        {{ filteredSuggestions.length }}
+      </span>
+    </div>
+
+    <label class="relative mb-4 block">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="16"
+        height="16"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        class="lucide lucide-search pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
+        aria-hidden="true"
+      >
+        <path d="m21 21-4.34-4.34"></path>
+        <circle cx="11" cy="11" r="8"></circle>
+      </svg>
+
+      <input
+        placeholder="Search by name or username..."
+        class="w-full rounded-xl border border-slate-200 bg-slate-50 py-2.5 pl-10 pr-10 text-sm text-slate-700 outline-none focus:border-[#1877f2] focus:bg-white"
+        [value]="searchTerm"
+        (input)="onSearch($event)"
+      >
+
+      @if (searchTerm) {
+        <button
+          type="button"
+          class="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-bold text-slate-400 hover:text-slate-600"
+          (click)="clearSearch()"
+        >
+          Clear
+        </button>
+      }
+    </label>
+
+    @if (isLoading) {
+      <div class="grid gap-3 sm:grid-cols-2">
+        @for (item of [1, 2, 3, 4, 5, 6]; track item) {
+          <article class="rounded-xl border border-slate-200 p-3">
+            <div class="flex items-center justify-between gap-3">
+              <div class="flex min-w-0 items-center gap-3">
+                <div class="h-12 w-12 animate-pulse rounded-full bg-slate-200"></div>
+                <div class="min-w-0 space-y-2">
+                  <div class="h-3 w-28 animate-pulse rounded bg-slate-200"></div>
+                  <div class="h-3 w-20 animate-pulse rounded bg-slate-100"></div>
+                </div>
+              </div>
+              <div class="h-8 w-20 animate-pulse rounded-full bg-slate-100"></div>
+            </div>
+          </article>
+        }
+      </div>
+    } @else if (filteredSuggestions.length > 0) {
+      <div class="grid gap-3 sm:grid-cols-2">
+        @for (user of filteredSuggestions; track user._id) {
+          <article class="rounded-xl border border-slate-200 p-3">
+            <div class="flex items-center justify-between gap-3">
+              <a
+                class="flex min-w-0 items-center gap-3 rounded-lg px-1 py-1 text-left transition hover:bg-slate-50"
+                [routerLink]="['/profile', user.id ?? user._id]"
+              >
+                <img
+                  [alt]="user.name"
+                  class="h-12 w-12 rounded-full object-cover"
+                  [src]="getSuggestionPhoto(user)"
+                >
+                <div class="min-w-0">
+                  <p class="truncate text-sm font-bold text-slate-900 hover:underline">
+                    {{ user.name }}
+                  </p>
+                  <p class="truncate text-xs text-slate-500">
+                    {{ user.username ? '@' + user.username : 'route user' }}
+                  </p>
+                </div>
+              </a>
+
+              <button
+                type="button"
+                class="inline-flex items-center gap-1 rounded-full px-3 py-1.5 text-xs font-bold transition disabled:opacity-60"
+                [class.bg-emerald-50]="isFollowed(user._id)"
+                [class.text-emerald-600]="isFollowed(user._id)"
+                [class.hover:bg-emerald-100]="isFollowed(user._id)"
+                [class.bg-[#e7f3ff]]="!isFollowed(user._id)"
+                [class.text-[#1877f2]]="!isFollowed(user._id)"
+                [class.hover:bg-[#d8ebff]]="!isFollowed(user._id)"
+                [disabled]="isFollowing(user._id) || isFollowed(user._id)"
+                (click)="followUser(user._id)"
+              >
+                @if (isFollowed(user._id)) {
+                  Followed
+                } @else if (isFollowing(user._id)) {
+                  Following...
+                } @else {
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="13"
+                    height="13"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="lucide lucide-user-plus"
+                    aria-hidden="true"
+                  >
+                    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="9" cy="7" r="4"></circle>
+                    <line x1="19" x2="19" y1="8" y2="14"></line>
+                    <line x1="22" x2="16" y1="11" y2="11"></line>
+                  </svg>
+                  Follow
+                }
+              </button>
+            </div>
+
+            <div class="mt-2 flex items-center gap-2 text-[11px] font-semibold text-slate-500">
+              <span class="rounded-full bg-slate-100 px-2 py-0.5">
+                {{ user.followersCount || 0 }} followers
+              </span>
+            </div>
+          </article>
+        }
+      </div>
+
+      <button
+        type="button"
+        class="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm font-bold text-slate-700 transition hover:bg-slate-100 disabled:opacity-60"
+        [disabled]="!hasMore || isLoadingMore"
+        (click)="loadMore()"
+      >
+        @if (isLoadingMore) {
+          Loading more users...
+        } @else if (hasMore) {
+          Load more users
+        } @else {
+          You reached the end
+        }
+      </button>
+    } @else {
+      <div class="rounded-2xl border border-dashed border-slate-200 bg-slate-50 px-4 py-8 text-center">
+        <p class="text-sm font-semibold text-slate-600">No suggestions matched your search.</p>
+        <p class="mt-1 text-xs text-slate-400">Try another name or username.</p>
+      </div>
+    }
+  </section>
+</div>

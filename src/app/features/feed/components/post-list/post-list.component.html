@@ -1,0 +1,49 @@
+<div class="space-y-5">
+  @for (post of posts; track post.id) {
+    <div>
+      <app-post-card
+        [comments]="commentsByPostId[post.id] ?? []"
+        [hasMoreComments]="!!commentsHasMoreByPostId[post.id]"
+        [currentUserId]="currentUserId"
+        [currentUserName]="currentUserName"
+        [currentUser]="currentUser"
+        [isDetailsView]="isDetailsView"
+        [isCommentsLoading]="loadingCommentsPostId === post.id"
+        [isCommentsOpen]="expandedCommentsPostId === post.id"
+        [isCommentSubmitting]="submittingCommentPostId === post.id"
+        [isLoadingMoreComments]="loadingMoreCommentsPostId === post.id"
+        [loadingRepliesCommentId]="loadingRepliesCommentId"
+        [loadingMoreRepliesCommentId]="loadingMoreRepliesCommentId"
+        [post]="post"
+        [repliesByCommentId]="repliesByCommentId"
+        [repliesHasMoreByCommentId]="repliesHasMoreByCommentId"
+        [submittingReplyCommentId]="submittingReplyCommentId"
+        (bookmark)="bookmark.emit($event)"
+        (delete)="delete.emit($event)"
+        (edit)="edit.emit($event)"
+        (like)="like.emit($event)"
+        (comment)="comment.emit($event)"
+        (deleteComment)="deleteComment.emit($event)"
+        (editComment)="editComment.emit($event)"
+        (likeComment)="likeComment.emit($event)"
+        (loadMoreComments)="loadMoreComments.emit($event)"
+        (loadMoreReplies)="loadMoreReplies.emit($event)"
+        (submitComment)="submitComment.emit($event)"
+        (submitReply)="submitReply.emit($event)"
+        (toggleReplies)="toggleReplies.emit($event)"
+        (share)="share.emit($event)"
+        (viewDetails)="viewDetails.emit($event)"
+      ></app-post-card>
+    </div>
+  }
+
+  @if (isLoadingMore) {
+    <div class="flex min-h-10 items-center justify-center">
+      <span class="text-xs font-semibold text-slate-400">Loading more...</span>
+    </div>
+  } @else if (posts.length > 0 && !hasMore) {
+    <div class="flex min-h-10 items-center justify-center">
+      <span class="text-xs font-semibold text-slate-400">You reached the end</span>
+    </div>
+  }
+</div>

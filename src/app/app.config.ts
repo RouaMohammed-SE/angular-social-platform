@@ -13,9 +13,17 @@ import {
 import { routes } from './app.routes';
 import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
 import { authInterceptor } from './core/interceptors/auth/auth-interceptor';
+import { provideToastr } from 'ngx-toastr';
+import { errorsInterceptor } from './core/interceptors/errors/errors-interceptor';
+import { loadingInterceptor } from './core/interceptors/loading/loading-interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
+    provideToastr({
+      preventDuplicates: true,
+      maxOpened: 3,
+      newestOnTop: true,
+    }),
     provideBrowserGlobalErrorListeners(),
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(
@@ -27,6 +35,9 @@ export const appConfig: ApplicationConfig = {
       }),
       withHashLocation(),
     ),
-    provideHttpClient(withFetch(), withInterceptors([authInterceptor])),
+    provideHttpClient(
+      withFetch(),
+      withInterceptors([loadingInterceptor, authInterceptor, errorsInterceptor]),
+    ),
   ],
 };

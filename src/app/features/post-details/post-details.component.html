@@ -1,0 +1,86 @@
+<div class="mx-auto max-w-3xl space-y-4">
+  <button
+    type="button"
+    class="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-bold text-slate-700 transition hover:bg-slate-50"
+    (click)="goBack()"
+  >
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      class="lucide lucide-arrow-left"
+      aria-hidden="true"
+    >
+      <path d="m12 19-7-7 7-7"></path>
+      <path d="M19 12H5"></path>
+    </svg>
+    Back
+  </button>
+
+  @if (isLoadingPost) {
+    <div class="rounded-[28px] border border-slate-200 bg-white px-6 py-12 text-center shadow-sm">
+      <p class="text-sm font-semibold text-slate-500">Loading post...</p>
+    </div>
+  } @else if (post) {
+    <app-post-card
+      [comments]="comments"
+      [currentUserId]="currentUserId"
+      [currentUserName]="currentUser?.name ?? 'You'"
+      [currentUser]="currentUser"
+      [hasMoreComments]="commentsHasMore"
+      [isCommentsLoading]="isLoadingComments"
+      [isCommentsOpen]="true"
+      [isCommentSubmitting]="isSubmittingComment"
+      [isDetailsView]="true"
+      [isLoadingMoreComments]="isLoadingMoreComments"
+      [loadingRepliesCommentId]="loadingRepliesCommentId"
+      [loadingMoreRepliesCommentId]="loadingMoreRepliesCommentId"
+      [post]="post"
+      [repliesByCommentId]="repliesByCommentId"
+      [repliesHasMoreByCommentId]="repliesHasMoreByCommentId"
+      [submittingReplyCommentId]="submittingReplyCommentId"
+      (bookmark)="handleBookmark($event)"
+      (delete)="handleDelete($event)"
+      (edit)="handleEdit($event)"
+      (like)="handleLike($event)"
+      (comment)="handleComment()"
+      (deleteComment)="handleDeleteComment($event)"
+      (editComment)="handleEditComment($event)"
+      (likeComment)="handleLikeComment($event)"
+      (loadMoreComments)="handleLoadMoreComments()"
+      (loadMoreReplies)="handleLoadMoreReplies($event)"
+      (submitComment)="handleSubmitComment($event)"
+      (submitReply)="handleSubmitReply($event)"
+      (toggleReplies)="handleToggleReplies($event)"
+      (share)="handleShare($event)"
+    ></app-post-card>
+  }
+</div>
+
+@if (editingPost) {
+  <app-edit-post-modal
+    [post]="editingPost"
+    [currentUserName]="currentUser?.name ?? 'You'"
+    [currentUser]="currentUser"
+    [isSubmitting]="isUpdatingPost"
+    (close)="closeEditModal()"
+    (save)="saveEditedPost($event)"
+  ></app-edit-post-modal>
+}
+
+@if (sharingPost) {
+  <app-share-post-modal
+    [post]="sharingPost"
+    [currentUserName]="currentUser?.name ?? 'You'"
+    [currentUser]="currentUser"
+    [isSubmitting]="isSharingPost"
+    (close)="closeShareModal()"
+    (share)="submitShare($event)"
+  ></app-share-post-modal>
+}

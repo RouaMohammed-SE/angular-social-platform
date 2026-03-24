@@ -11,6 +11,7 @@ import {
   UpdateCommentResponse,
 } from '../../models/comments-response.interface';
 import { environment } from '../../../../environments/environment';
+import { buildRequestContext } from '../../interceptors/request-context/request-context';
 
 @Injectable({
   providedIn: 'root',
@@ -18,31 +19,45 @@ import { environment } from '../../../../environments/environment';
 export class CommentsService {
   private readonly httpClient = inject(HttpClient);
 
-  getCommentsForPost(postId: string): Observable<GetPostCommentsResponse> {
-    return this.httpClient.get<GetPostCommentsResponse>(`${environment.apiUrl}/posts/${postId}/comments`);
-  }
-
-  createComment(postId: string, commentData: object): Observable<CreateCommentResponse> {
-    return this.httpClient.post<CreateCommentResponse>(
-      `${environment.apiUrl}/posts/${postId}/comments`,
-      commentData,
+  getCommentsForPost(postId: string, page = 1, limit = 5): Observable<GetPostCommentsResponse> {
+    return this.httpClient.get<GetPostCommentsResponse>(
+      `${environment.apiUrl}/posts/${postId}/comments?page=${page}&limit=${limit}`,
+      {
+        context: createLocalCommentContext(),
+      },
     );
   }
 
-  getcommentreplies(postId: string, commentId: string): Observable<GetCommentRepliesResponse> {
+  createComment(postId: string, commentData: FormData): Observable<CreateCommentResponse> {
+    return this.httpClient.post<CreateCommentResponse>(
+      `${environment.apiUrl}/posts/${postId}/comments`,
+      commentData,
+      {
+        context: createLocalCommentContext(),
+      },
+    );
+  }
+
+  getCommentReplies(postId: string, commentId: string, page = 1, limit = 10): Observable<GetCommentRepliesResponse> {
     return this.httpClient.get<GetCommentRepliesResponse>(
-      `${environment.apiUrl}/posts/${postId}/comments/${commentId}/replies`,
+      `${environment.apiUrl}/posts/${postId}/comments/${commentId}/replies?page=${page}&limit=${limit}`,
+      {
+        context: createLocalCommentContext(),
+      },
     );
   }
 
   createCommentReply(
     postId: string,
     commentId: string,
-    commentData: object,
+    commentData: FormData,
   ): Observable<CreateReplyResponse> {
     return this.httpClient.post<CreateReplyResponse>(
       `${environment.apiUrl}/posts/${postId}/comments/${commentId}/replies`,
       commentData,
+      {
+        context: createLocalCommentContext(),
+      },
     );
   }
 
@@ -50,16 +65,22 @@ export class CommentsService {
     return this.httpClient.put<UpdateCommentResponse>(
       `${environment.apiUrl}/posts/${postId}/comments/${commentId}`,
       commentData,
+      {
+        context: createLocalCommentContext(),
+      },
     );
   }
 
   deleteComment(postId: string, commentId: string): Observable<DeleteCommentResponse> {
     return this.httpClient.delete<DeleteCommentResponse>(
       `${environment.apiUrl}/posts/${postId}/comments/${commentId}`,
+      {
+        context: createLocalCommentContext(),
+      },
     );
   }
 
-  likeunlikeComment(
+  likeUnlikeComment(
     postId: string,
     commentId: string,
     commentData: object | null,
@@ -67,6 +88,16 @@ export class CommentsService {
     return this.httpClient.put<ToggleCommentLikeResponse>(
       `${environment.apiUrl}/posts/${postId}/comments/${commentId}/like`,
       commentData,
+      {
+        context: createLocalCommentContext(),
+      },
     );
   }
+}
+
+function createLocalCommentContext() {
+  return buildRequestContext({
+    skipErrorHandling: true,
+    skipLoadingSpinner: true,
+  });
 }

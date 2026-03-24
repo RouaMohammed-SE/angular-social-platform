@@ -11,6 +11,7 @@ export interface Comment {
   likes: string[];
   createdAt: string;
   likesCount?: number;
+  repliesCount?: number;
   isReply?: boolean;
   replies?: Comment[];
 }

@@ -1,15 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
-import {
-  ReactiveFormsModule,
-  FormControl,
-  FormGroup,
-  Validators,
-  AbstractControl,
-  FormBuilder,
-} from '@angular/forms';
+import { ReactiveFormsModule, Validators, AbstractControl, FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
-import { HttpErrorResponse } from '@angular/common/http';
+
 import { AuthService } from '../../../../core/services/auth/auth.service';
 import { AlertService } from '../../../../core/services/alert/alert.service';
 

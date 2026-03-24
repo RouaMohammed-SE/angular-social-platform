@@ -1,5 +1,12 @@
-<!-- NavBar -->
-<app-navbar></app-navbar>
+<div class="min-h-screen bg-light-grey">
+  <!-- NavBar -->
+  <app-navbar></app-navbar>
 
-<!-- pages [feed, profile ...etc] -->
-<router-outlet></router-outlet>
+  <!-- pages [feed, profile ...etc] -->
+
+  <div class="mx-auto max-w-7xl px-3 py-3.5">
+    <main class="min-w-0">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+</div>

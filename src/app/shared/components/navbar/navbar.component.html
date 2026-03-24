@@ -1,0 +1,239 @@
+<header class="sticky top-0 z-40 border-b border-slate-200/90 bg-white/95 backdrop-blur">
+  <div
+    class="mx-auto flex max-w-7xl items-center justify-between gap-2 px-2 py-1.5 sm:gap-3 sm:px-3"
+  >
+    <div class="flex items-center gap-3">
+      <img
+        alt="Friendra"
+        class="h-9 w-9 rounded-xl object-cover"
+        src="assets/images/app/logo.png"
+      />
+      <p class="hidden text-xl font-extrabold text-slate-900 sm:block">Friendra</p>
+    </div>
+    <nav
+      aria-label="Primary Navigation"
+      class="flex min-w-0 items-center gap-1 overflow-x-auto rounded-2xl border border-slate-200 bg-slate-50/90 px-1 py-1 sm:px-1.5"
+    >
+      <a
+        routerLink="/feed"
+        routerLinkActive="bg-white text-[#1f6fe5]"
+        [routerLinkActiveOptions]="{ exact: true }"
+        aria-current="page"
+        class="relative flex items-center gap-1.5 rounded-xl px-2.5 py-2 text-sm font-extrabold transition sm:gap-2 sm:px-3.5 text-slate-600 hover:bg-white/90 hover:text-slate-900"
+      >
+        <span class="relative">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="lucide lucide-house"
+            aria-hidden="true"
+          >
+            <path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"></path>
+            <path
+              d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"
+            ></path>
+          </svg>
+        </span>
+        <span class="hidden sm:inline">Feed</span>
+        <span class="sr-only sm:hidden">Feed</span>
+      </a>
+      <a
+        routerLink="/profile"
+        routerLinkActive="bg-white text-[#1f6fe5]"
+        class="relative flex items-center gap-1.5 rounded-xl px-2.5 py-2 text-sm font-extrabold transition sm:gap-2 sm:px-3.5 text-slate-600 hover:bg-white/90 hover:text-slate-900"
+      >
+        <span class="relative">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="lucide lucide-user"
+            aria-hidden="true"
+          >
+            <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+        </span>
+        <span class="hidden sm:inline">Profile</span>
+        <span class="sr-only sm:hidden">Profile</span>
+      </a>
+      <a
+        routerLink="/notifications"
+        routerLinkActive="bg-white text-[#1f6fe5]"
+        class="relative flex items-center gap-1.5 rounded-xl px-2.5 py-2 text-sm font-extrabold transition sm:gap-2 sm:px-3.5 text-slate-600 hover:bg-white/90 hover:text-slate-900"
+      >
+        <span class="relative">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="lucide lucide-message-circle"
+            aria-hidden="true"
+          >
+            <path
+              d="M2.992 16.342a2 2 0 0 1 .094 1.167l-1.065 3.29a1 1 0 0 0 1.236 1.168l3.413-.998a2 2 0 0 1 1.099.092 10 10 0 1 0-4.777-4.719"
+            ></path>
+          </svg>
+          <span
+            *ngIf="unreadCount > 0"
+            class="absolute -right-2 -top-2 inline-flex min-w-4 items-center justify-center rounded-full bg-[#ef4444] px-1 text-2xs font-black leading-4 text-white"
+            >{{ unreadCount }}</span
+          >
+        </span>
+        <span class="hidden sm:inline">Notifications</span>
+        <span class="sr-only sm:hidden">Notifications</span>
+      </a>
+    </nav>
+    <div
+      class="relative"
+      *ngIf="user"
+      appClickOutside
+      [appClickOutsideEnabled]="showDropdown"
+      [appClickOutsideCloseOnEscape]="true"
+      (appClickOutside)="closeDropdown()"
+    >
+      <button
+        type="button"
+        (click)="toggleDropdown($event)"
+        class="flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-2 py-1.5 transition hover:bg-slate-100"
+        [attr.aria-expanded]="showDropdown"
+        aria-haspopup="menu"
+      >
+        <img
+          [alt]="user?.name"
+          class="h-8 w-8 rounded-full object-cover"
+          [src]="user | avatarPhoto"
+        />
+        <span class="hidden max-w-35 truncate text-sm font-semibold text-slate-800 md:block">{{
+          user?.name
+        }}</span>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="15"
+          height="15"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          class="lucide lucide-chevron-down text-slate-500 transition"
+          [class.rotate-180]="showDropdown"
+          aria-hidden="true"
+        >
+          <path d="m6 9 6 6 6-6"></path>
+        </svg>
+      </button>
+      <div
+        *ngIf="showDropdown"
+        class="absolute right-0 mt-2 w-64 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xl z-50"
+        role="menu"
+      >
+        <div class="border-b border-slate-100 px-4 py-4">
+          <p class="truncate text-sm font-bold text-slate-900">{{ user?.name }}</p>
+          <p class="truncate text-xs text-slate-500">
+            {{ '@' + (user?.username || 'friendra-user') }}
+          </p>
+        </div>
+
+        <button
+          type="button"
+          (click)="navigateToProfile()"
+          class="flex w-full items-center gap-3 px-4 py-3 text-left text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
+          role="menuitem"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="text-slate-500"
+            aria-hidden="true"
+          >
+            <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+          <span>Profile</span>
+        </button>
+
+        <button
+          type="button"
+          (click)="navigateToSettings()"
+          class="flex w-full items-center gap-3 px-4 py-3 text-left text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
+          role="menuitem"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="text-slate-500"
+            aria-hidden="true"
+          >
+            <path
+              d="M12.22 2h-.44a2 2 0 0 0-1.94 1.53l-.24.99a2 2 0 0 1-1.33 1.42l-.94.32a2 2 0 0 0-1.15 2.86l.46.9a2 2 0 0 1 0 1.96l-.46.9a2 2 0 0 0 1.15 2.86l.94.32a2 2 0 0 1 1.33 1.42l.24.99A2 2 0 0 0 11.78 22h.44a2 2 0 0 0 1.94-1.53l.24-.99a2 2 0 0 1 1.33-1.42l.94-.32a2 2 0 0 0 1.15-2.86l-.46-.9a2 2 0 0 1 0-1.96l.46-.9a2 2 0 0 0-1.15-2.86l-.94-.32a2 2 0 0 1-1.33-1.42l-.24-.99A2 2 0 0 0 12.22 2z"
+            ></path>
+            <circle cx="12" cy="12" r="3"></circle>
+          </svg>
+          <span>Settings</span>
+        </button>
+
+        <div class="border-t border-slate-100"></div>
+
+        <button
+          type="button"
+          (click)="logout()"
+          class="flex w-full items-center gap-3 px-4 py-3 text-left text-sm font-semibold text-rose-600 transition hover:bg-rose-50"
+          role="menuitem"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <path d="m16 17 5-5-5-5"></path>
+            <path d="M21 12H9"></path>
+            <path d="M12 19H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h7"></path>
+          </svg>
+          <span>Log out</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</header>

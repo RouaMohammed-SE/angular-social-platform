@@ -32,7 +32,7 @@ export interface ToggleBookmarkData {
 
 export type GetAllPostsResponse = ApiResponse<PostsData, PaginationMeta>;
 export type GetHomeFeedResponse = ApiResponse<PostsData, FeedMeta>;
-export type GetSinglePostResponse = ApiResponse<PostsData, PaginationMeta>;
+export type GetSinglePostResponse = ApiResponse<PostData | PostsData, PaginationMeta>;
 export type CreatePostResponse = ApiResponse<PostData>;
 export type UpdatePostResponse = ApiResponse<PostData>;
 export type DeletePostResponse = ApiResponse<PostData>;
